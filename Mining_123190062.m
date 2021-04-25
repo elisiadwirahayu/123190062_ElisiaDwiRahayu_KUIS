@@ -22,7 +22,7 @@ function varargout = Mining_123190062(varargin)
 
 % Edit the above text to modify the response to help Mining_123190062
 
-% Last Modified by GUIDE v2.5 24-Apr-2021 15:40:22
+% Last Modified by GUIDE v2.5 25-Apr-2021 08:58:36
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -72,22 +72,6 @@ function varargout = Mining_123190062_OutputFcn(hObject, eventdata, handles)
 % Get default command line output from handles structure
 varargout{1} = handles.output;
 
-
-% --- Executes on button press in pushbutton1.
-function pushbutton1_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-data = readtable('ph-data.csv');
-data1 = table2array(data);
-set(handles.uitable1,'data',data1);
-
-% --- Executes on button press in pushbutton2.
-function pushbutton2_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-set(handles.uitable1,'data','');
 
 
 function blue_Callback(hObject, eventdata, handles)
@@ -158,50 +142,44 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on button press in pushbutton3.
-function pushbutton3_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton3 (see GCBO)
+
+function k_Callback(hObject, eventdata, handles)
+% hObject    handle to k (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-biru = str2double(get(handles.blue,'String'));
-hijau = str2double(get(handles.green,'String'));
-merah = str2double(get(handles.red,'String'));
 
-sample = [biru hijau merah];
+% Hints: get(hObject,'String') returns contents of k as text
+%        str2double(get(hObject,'String')) returns contents of k as a double
 
-opts = detectImportOptions('ph-data.csv');
-opts.SelectedVariableNames = (1:3);
-training = readtable('ph-data.csv',opts);
 
-opts = detectImportOptions('ph-data.csv');
-opts.SelectedVariableNames = (4);
-group = readtable('ph-data.csv',opts);
+% --- Executes during object creation, after setting all properties.
+function k_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to k (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
 
-class = fitcknn(training,group,'NumNeighbor',7);
-
-hasil = predict(class, sample);
-
-set(handles.ph, 'String', hasil);
-
-if hasil < 7
-    set(handles.result, 'String', 'Acid');
-elseif hasil == 7
-    set(handles.result, 'String', 'Neutral');
-else
-    set(handles.result, 'String', 'Alkali');
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
 end
 
-% --- Executes on button press in pushbutton4.
-function pushbutton4_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton4 (see GCBO)
+
+% --- Executes on button press in pushbutton1.
+function pushbutton1_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-set(handles.blue, 'String', '');
-set(handles.green, 'String', '');
-set(handles.red, 'String', '');
-set(handles.ph, 'String', '-');
-set(handles.result, 'String', '-');
+data = readtable('ph-data.csv');
+data1 = table2array(data);
+set(handles.uitable1,'data',data1);
 
+% --- Executes on button press in pushbutton2.
+function pushbutton2_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+set(handles.uitable1,'data','');
 
 function ph_Callback(hObject, eventdata, handles)
 % hObject    handle to ph (see GCBO)
@@ -225,7 +203,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-
 function result_Callback(hObject, eventdata, handles)
 % hObject    handle to result (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -246,3 +223,50 @@ function result_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes on button press in pushbutton3.
+function pushbutton3_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+biru = str2double(get(handles.blue,'String'));
+hijau = str2double(get(handles.green,'String'));
+merah = str2double(get(handles.red,'String'));
+nilaik = str2double(get(handles.k,'String'));
+
+sample = [biru hijau merah];
+
+opts = detectImportOptions('ph-data.csv');
+opts.SelectedVariableNames = (1:3);
+training = readtable('ph-data.csv',opts);
+
+opts = detectImportOptions('ph-data.csv');
+opts.SelectedVariableNames = (4);
+group = readtable('ph-data.csv',opts);
+
+class = fitcknn(training,group,'NumNeighbor',nilaik);
+
+hasil = predict(class, sample);
+
+set(handles.ph, 'String', hasil);
+
+if hasil < 7
+    set(handles.result, 'String', 'Acid');
+elseif hasil == 7
+    set(handles.result, 'String', 'Neutral');
+else
+    set(handles.result, 'String', 'Alkali');
+end
+
+% --- Executes on button press in pushbutton4.
+function pushbutton4_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+set(handles.blue, 'String', '');
+set(handles.green, 'String', '');
+set(handles.red, 'String', '');
+set(handles.k, 'String', '');
+set(handles.ph, 'String', '-');
+set(handles.result, 'String', '-');
